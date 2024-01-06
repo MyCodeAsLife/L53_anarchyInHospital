@@ -20,13 +20,23 @@ namespace L53_anarchyInHospital
         private List<Patient> _patients = new List<Patient>();
         private List<Patient> _formattedPatientList;
 
+        private String _delimeterString;
+        private String _delimiterMenu;
+
         public Hospital()
         {
+            char delimiterSymbolMenu = '=';
+            char delimiterSymbolString = '-';
+            int delimiterLenght = 75;
+
+            _delimeterString = new string(delimiterSymbolString, delimiterLenght);
+            _delimiterMenu = new string(delimiterSymbolMenu, delimiterLenght);
+
             Fill();
             _formattedPatientList = _patients;
         }
 
-        internal enum Menu
+        private enum Menu
         {
             SortByFullName = 1,
             SortByAge = 2,
@@ -72,26 +82,25 @@ namespace L53_anarchyInHospital
                             continue;
 
                         default:
-                            Error.Show();
+                            ShowError();
                             break;
                     }
                 }
                 else
                 {
-                    Error.Show();
+                    ShowError();
                 }
 
                 Console.ReadKey(true);
             }
         }
 
-        private static void ShowMenu()
+        private void ShowMenu()
         {
-            Console.WriteLine(new string(FormatOutput.DelimiterSymbolMenu, FormatOutput.DelimiterLenght) + $"\nДоступные действия.\n" +
-                              new string(FormatOutput.DelimiterSymbolString, FormatOutput.DelimiterLenght) +
-                              $"\n{(int)Menu.SortByFullName} - Отсортировать по ФИО.\n{(int)Menu.SortByAge} - Отсортировать по возрасту." +
-                              $"\n{(int)Menu.SearchByDisease} - Отсеять по болезни.\n{(int)Menu.ResetFormatting} - Сбросить форматирование" +
-                              $" списка пациентов.\n{(int)Menu.Exit} - Выйти.\n" + new string(FormatOutput.DelimiterSymbolMenu, FormatOutput.DelimiterLenght));
+            Console.WriteLine(_delimiterMenu + $"\nДоступные действия.\n" + _delimeterString + $"\n{(int)Menu.SortByFullName}" +
+                              $" - Отсортировать по ФИО.\n{(int)Menu.SortByAge} - Отсортировать по возрасту.\n{(int)Menu.SearchByDisease}" +
+                              $" - Отсеять по болезни.\n{(int)Menu.ResetFormatting} - Сбросить форматирование списка пациентов.\n" +
+                              $"{(int)Menu.Exit} - Выйти.\n" + _delimiterMenu);
         }
 
         private void SortByFullName()
@@ -118,7 +127,7 @@ namespace L53_anarchyInHospital
 
         private void ShowPatients(List<Patient> patients)
         {
-            Console.WriteLine("Список пациентов.\n" + new string(FormatOutput.DelimiterSymbolString, FormatOutput.DelimiterLenght));
+            Console.WriteLine("Список пациентов.\n" + _delimeterString);
 
             foreach (var patient in patients)
                 Console.WriteLine($"ФИО: {patient.FullName}\tВозраст: {patient.Age}\tЗаболевание: {patient.Disease}");
@@ -138,26 +147,9 @@ namespace L53_anarchyInHospital
             _patients.Add(new Patient("Евгеньева Евгения Евгеновна", 55, "сальмонелез"));
         }
 
-        internal class Error
+        private void ShowError()
         {
-            public static void Show()
-            {
-                Console.WriteLine("\nВы ввели некорректное значение.");
-            }
-        }
-
-        internal class FormatOutput
-        {
-            static FormatOutput()
-            {
-                DelimiterSymbolMenu = '=';
-                DelimiterSymbolString = '-';
-                DelimiterLenght = 75;
-            }
-
-            public static char DelimiterSymbolMenu { get; private set; }
-            public static char DelimiterSymbolString { get; private set; }
-            public static int DelimiterLenght { get; private set; }
+            Console.WriteLine("\nВы ввели некорректное значение.");
         }
     }
 
